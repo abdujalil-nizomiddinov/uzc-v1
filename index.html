@@ -1,519 +1,200 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
+<html lang="uz">
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>UZC IDE - Professional Development Environment</title>
+    <title>UZCODE Dasturlash Tili</title>
+    <link rel="icon" href="src/pic/Home.png" />
     <style>
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: #252526;
-            color: #e0e0e0;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
+      html {
+        cursor: url(src/pic/Mouse.png), auto;
+      }
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f5f5f5;
+      }
+      .container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+      header {
+        background-color: #2c3e50;
+        color: white;
+        padding: 20px;
+        text-align: center;
+        font-size: 24px;
+        font-weight: bold;
+      }
+      .section {
+        background: white;
+        padding: 20px;
+        margin-top: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        position: relative;
+      }
+      pre {
+        position: relative;
+      }
+      pre code {
+        background: #2d2d2d;
+        color: #f8f8f2;
+        display: block;
+        padding: 15px;
+        border-radius: 5px;
+        overflow-x: auto;
+        font-family: "Courier New", monospace;
+      }
+      .copy-btn {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: #3498db;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 12px;
+      }
+      .footer {
+        text-align: center;
+        padding: 10px;
+        margin-top: 20px;
+        background-color: #2c3e50;
+        color: white;
+      }
+      ul li {
+        margin-bottom: 10px;
+      }
+      h2 {
+        color: #2c3e50;
+      }
+      #uzcode {
+        color: rgb(0, 153, 255);
+        font-weight: bold;
+        text-decoration: none;
+        position: relative;
+      }
 
-        #container {
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-        }
+      #uzcode::after {
+        content: "";
+        position: absolute;
+        left: 50%;
+        bottom: 0;
+        transform: translateX(-50%);
+        width: 0;
+        height: 2px;
+        background-color: rgb(0, 153, 255);
+        transition: width 0.4s ease;
+      }
 
-        #header {
-            background: #333333;
-            padding: 8px 15px;
-            display: flex;
-            align-items: center;
-            border-bottom: 1px solid #1e1e1e;
-        }
-
-        #logo {
-            font-weight: bold;
-            color: #007acc;
-            margin-right: 20px;
-            font-size: 18px;
-        }
-
-        .button-container {
-            display: flex;
-            gap: 8px;
-        }
-
-        button {
-            background: #0e639c;
-            border: none;
-            padding: 6px 12px;
-            color: white;
-            border-radius: 2px;
-            cursor: pointer;
-            font-size: 13px;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        button:hover {
-            background: #1177bb;
-        }
-
-        button svg {
-            width: 14px;
-            height: 14px;
-            fill: currentColor;
-        }
-
-        #main-content {
-            display: flex;
-            flex: 1;
-            overflow: hidden;
-        }
-
-        #sidebar {
-            width: 250px;
-            background: #252526;
-            border-right: 1px solid #1e1e1e;
-            display: flex;
-            flex-direction: column;
-        }
-
-        #file-explorer {
-            flex: 1;
-            overflow-y: auto;
-            padding: 10px 0;
-        }
-
-        .file-item {
-            padding: 6px 20px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 13px;
-        }
-
-        .file-item:hover {
-            background: #2a2d2e;
-        }
-
-        .file-item.active {
-            background: #37373d;
-        }
-
-        .file-icon {
-            width: 16px;
-            height: 16px;
-            fill: #7a7a7a;
-        }
-
-        #editor-container {
-            flex: 1;
-            height: 100%;
-        }
-
-        #output-container {
-            height: 200px;
-            background: #1e1e1e;
-            border-top: 1px solid #333;
-            display: flex;
-            flex-direction: column;
-        }
-
-        #output-header {
-            padding: 5px 10px;
-            background: #252526;
-            border-bottom: 1px solid #333;
-            font-size: 12px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        #output {
-            flex: 1;
-            padding: 10px;
-            font-family: 'Consolas', 'Courier New', monospace;
-            font-size: 13px;
-            color: #e0e0e0;
-            overflow-y: auto;
-            white-space: pre-wrap;
-        }
-
-        #status-bar {
-            height: 22px;
-            background: #007acc;
-            display: flex;
-            align-items: center;
-            padding: 0 10px;
-            font-size: 12px;
-        }
-
-        .status-item {
-            margin-right: 15px;
-        }
-
-        .success {
-            color: #4ec9b0;
-        }
-
-        .error {
-            color: #f48771;
-        }
-
-        /* Monaco editor overrides */
-        .monaco-editor .margin {
-            background-color: #252526 !important;
-        }
+      #uzcode:hover::after {
+        width: 100%;
+      }
     </style>
-</head>
-<body>
-    <div id="container">
-        <div id="header">
-            <div id="logo">UZC IDE</div>
-            <div class="button-container">
-                <button onclick="runCode()">
-                    <svg viewBox="0 0 24 24">
-                        <path d="M8 5v14l11-7z"/>
-                    </svg>
-                    Run (F5)
-                </button>
-                <button onclick="clearOutput()">
-                    <svg viewBox="0 0 24 24">
-                        <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
-                    </svg>
-                    Clear
-                </button>
-            </div>
-        </div>
+  </head>
+  <body>
+    <header>UZCODE(uzc) Dasturlash Tili</header>
+    <div class="container">
+      <div class="section">
+        <h2>UZCODE(uzc) Tiliga Haqida</h2>
+        <p>
+          UZCODE(uzc) - bu juda oddiy, JavaScript buyruqlariga ega dasturlash
+          tili. U yangi boshlovchilar uchun qulay va o‘qilishi oson sintaksisga
+          ega.
+          <a href="src/html/main.html" id="uzcode" target="_blank"
+            >Uzcode Compiler(ga) o'tish.</a
+          >
+        </p>
+      </div>
 
-        <div id="main-content">
-            <div id="sidebar">
-                <div id="file-explorer">
-                    <div class="file-item active">
-                        <svg class="file-icon" viewBox="0 0 24 24">
-                            <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6z"/>
-                        </svg>
-                        main.uzc
-                    </div>
-                    <div class="file-item">
-                        <svg class="file-icon" viewBox="0 0 24 24">
-                            <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6z"/>
-                        </svg>
-                        example.uzc
-                    </div>
-                    <div class="file-item">
-                        <svg class="file-icon" viewBox="0 0 24 24">
-                            <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6z"/>
-                        </svg>
-                        test.uzc
-                    </div>
-                </div>
-            </div>
+      <div class="section">
+        <h2>Asosiy Buyruqlar</h2>
+        <ul>
+          <li><strong>print(...)</strong> - Ma'lumotni konsolga chiqarish</li>
+          <li>
+            <strong>let</strong> - O‘zgaruvchi e'lon qilish:
+            <code>let x = 5</code>
+          </li>
+          <li><strong>if / elif / else</strong> - Shartli operatorlar</li>
+          <li>
+            <strong>function</strong> - Funksiya yaratish:
+            <code>function nomi(param) { ... }</code>
+          </li>
+          <li>
+            <strong>type(...)</strong> - O‘zgaruvchi turini aniqlash:
+            <code>type(ozgaruvchi)</code>
+          </li>
+          <li>
+            <strong>list</strong> - Ro‘yxat yaratish:
+            <code>let royxat = [1, 2, 3]</code>
+          </li>
+          <li>
+            <strong>{...}</strong> - Matn ichida o‘zgaruvchini chiqarish:
+            <code>"Salom, {ism}"</code>
+          </li>
+          <li>
+            <strong>#</strong> - Izoh yozish uchun: <code># Bu izoh</code>
+          </li>
+        </ul>
+      </div>
 
-            <div id="editor-container"></div>
-        </div>
+      <div class="section">
+        <h2>Misollar</h2>
 
-        <div id="output-container">
-            <div id="output-header">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="#e0e0e0">
-                    <path d="M20 8h-2.81c-.45-.78-1.07-1.45-1.82-1.96L17 4.41 15.59 3l-2.17 2.17C12.96 5.06 12.49 5 12 5c-.49 0-.96.06-1.41.17L8.41 3 7 4.41l1.62 1.63C7.88 6.55 7.26 7.22 6.81 8H4v2h2.09c-.05.33-.09.66-.09 1v1H4v2h2v1c0 .34.04.67.09 1H4v2h2.81c1.04 1.79 2.97 3 5.19 3s4.15-1.21 5.19-3H20v-2h-2.09c.05-.33.09-.66.09-1v-1h2v-2h-2v-1c0-.34-.04-.67-.09-1H20V8zm-6 8h-4v-2h4v2zm0-4h-4v-2h4v2z"/>
-                </svg>
-                OUTPUT
-            </div>
-            <div id="output"></div>
-        </div>
+        <pre><code># Konsolga chiqarish
+print("Salom, Dasturchi!")</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
 
-        <div id="status-bar">
-            <div class="status-item">UZC</div>
-            <div class="status-item">UTF-8</div>
-            <div class="status-item">Ln 1, Col 1</div>
-        </div>
+        <pre><code># O‘zgaruvchilar bilan ishlash
+let a = 10
+let b = 5
+print("Yig‘indi:", a + b)</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+
+        <pre><code># Ro‘yxat bilan ishlash
+let mevalar = ["Olma", "Banan", "Anor"]
+print("Mevalar:", mevalar)</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+
+        <pre><code># Shartli operatorlar
+let yosh = 20
+if yosh >= 18 {
+    print("Siz balog‘at yoshidasiz")
+} elif yosh >= 13 {
+    print("Siz o‘smirsiz")
+} else {
+    print("Siz bola ekansiz")
+}</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+
+        <pre><code># Funksiya yaratish
+function salomBer(ism) {
+    print("Salom, {ism}")
+}
+salomBer("Jasur")</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+
+        <pre><code># Typeni aniqlash
+let son = 5
+print("Turi:", type(son))</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+
+        <pre><code># Matnli o‘zgaruvchi bilan
+let ism = "Ali"
+print("Salom, {ism}")</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+      </div>
+    </div>
+    <div class="footer">
+      © 2025 UZCODE(UZC) Dasturlash Tili. Barcha huquqlar himoyalangan.
     </div>
 
-    <!-- Monaco Editor CDN -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs/loader.min.js"></script>
     <script>
-        let editor;
-        let outputElement = document.getElementById('output');
-
-        // Configure Monaco loader
-        require.config({
-            paths: {
-                vs: "https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs",
-            },
+      function copyCode(button) {
+        const code = button.parentElement.querySelector("code").innerText;
+        navigator.clipboard.writeText(code).then(() => {
+          button.innerText = "Copied !!!";
+          setTimeout(() => (button.innerText = "Copy"), 2500);
         });
-
-        // Initialize Monaco Editor
-        require(["vs/editor/editor.main"], function() {
-            // Register UZC language
-            monaco.languages.register({ id: "uzc" });
-
-            // Set syntax highlighting rules
-            monaco.languages.setMonarchTokensProvider("uzc", {
-                defaultToken: '',
-                tokenPostfix: '.uzc',
-
-                keywords: [
-                    'let', 'const', 'function', 'if', 'elif', 'else', 'while', 
-                    'for', 'return', 'try', 'catch', 'class', 'new', 'this',
-                    'null', 'undefined', 'true', 'false'
-                ],
-
-                builtinFunctions: [
-                    'print', 'input', 'type', 'number', 'setTimeout', 
-                    'setInterval', 'clearTimeout', 'clearInterval'
-                ],
-
-                tokenizer: {
-                    root: [
-                        [/\b(let|const|function|if|elif|else|while|for|return|try|catch|class|new|this|null|undefined|true|false)\b/, 'keyword'],
-                        [/\b(print|input|type|number|setTimeout|setInterval|clearTimeout|clearInterval)\b(?=\s*\()/, 'function.builtin'],
-                        [/[a-zA-Z_$][\w$]*/, 'identifier'],
-                        [/".*?"/, 'string'],
-                        [/'.*?'/, 'string'],
-                        [/`.*?`/, 'string'],
-                        [/\d+/, 'number'],
-                        [/[{}()\[\]]/, '@brackets'],
-                        [/#.*$/, 'comment'],
-                    ]
-                }
-            });
-
-            // Set language configuration
-            monaco.languages.setLanguageConfiguration("uzc", {
-                comments: {
-                    lineComment: "#"
-                },
-                brackets: [
-                    ["{", "}"],
-                    ["[", "]"],
-                    ["(", ")"]
-                ],
-                autoClosingPairs: [
-                    { open: "{", close: "}" },
-                    { open: "[", close: "]" },
-                    { open: "(", close: ")" },
-                    { open: '"', close: '"' },
-                    { open: "'", close: "'" },
-                    { open: "`", close: "`" }
-                ],
-                surroundingPairs: [
-                    { open: "{", close: "}" },
-                    { open: "[", close: "]" },
-                    { open: "(", close: ")" },
-                    { open: '"', close: '"' },
-                    { open: "'", close: "'" },
-                    { open: "`", close: "`" }
-                ],
-                folding: {
-                    markers: {
-                        start: new RegExp("^\\s*#region\\b"),
-                        end: new RegExp("^\\s*#endregion\\b")
-                    }
-                }
-            });
-
-            // Register completion provider
-            monaco.languages.registerCompletionItemProvider("uzc", {
-                provideCompletionItems: function(model, position) {
-                    const suggestions = [
-                        {
-                            label: 'print',
-                            kind: monaco.languages.CompletionItemKind.Function,
-                            insertText: 'print(${1:value})',
-                            insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-                            documentation: {
-                                value: '**print(value1, value2, ...)**\n\nQiymat(lar)ni chiqaradi\n\n```uzc\nprint("Salom", "Dunyo")\n```'
-                            }
-                        },
-                        {
-                            label: 'input',
-                            kind: monaco.languages.CompletionItemKind.Function,
-                            insertText: 'input("${1:prompt}")',
-                            insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-                            documentation: {
-                                value: '**input(prompt)**\n\nFoydalanuvchidan kiritish so\'raydi\n\n```uzc\nlet ism = input("Ismingizni kiriting: ")\n```'
-                            }
-                        },
-                        {
-                            label: 'function',
-                            kind: monaco.languages.CompletionItemKind.Keyword,
-                            insertText: 'function ${1:name}(${2:params}) {\n\t${3}\n}',
-                            insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-                            documentation: {
-                                value: '**function name(params)**\n\nYangi funktsiya yaratadi\n\n```uzc\nfunction salom(ism) {\n\tprint("Salom", ism)\n}\n```'
-                            }
-                        },
-                        {
-                            label: 'if',
-                            kind: monaco.languages.CompletionItemKind.Keyword,
-                            insertText: 'if (${1:condition}) {\n\t${2}\n}',
-                            insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-                            documentation: {
-                                value: '**if (condition)**\n\nShartli operator\n\n```uzc\nif (yosh > 18) {\n\tprint("Katta")\n}\n```'
-                            }
-                        },
-                        {
-                            label: 'for',
-                            kind: monaco.languages.CompletionItemKind.Keyword,
-                            insertText: 'for (let ${1:i} = 0; ${1:i} < ${2:length}; ${1:i}++) {\n\t${3}\n}',
-                            insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-                            documentation: {
-                                value: '**for loop**\n\nTakrorlanish operatori\n\n```uzc\nfor (let i = 0; i < 5; i++) {\n\tprint(i)\n}\n```'
-                            }
-                        }
-                    ];
-
-                    return { suggestions: suggestions };
-                }
-            });
-
-            // Create editor instance
-            editor = monaco.editor.create(document.getElementById('editor-container'), {
-                value: [
-                    '# UZC Dasturlash Tili',
-                    '# Asosiy dastur',
-                    '',
-                    'print("Salom, Dunyo!")',
-                    '',
-                    '# O\'zgaruvchilar',
-                    'let x = 5',
-                    'let y = 10',
-                    'print("X + Y =", x + y)',
-                    '',
-                    '# Foydalanuvchi kiritishi',
-                    'let ism = input("Ismingizni kiriting: ")',
-                    'print("Salom,", ism)',
-                    '',
-                    '# Shart operatori',
-                    'if (x > y) {',
-                    '\tprint("X katta Y dan")',
-                    '} elif (x == y) {',
-                    '\tprint("X teng Y ga")',
-                    '} else {',
-                    '\tprint("X kichik Y dan")',
-                    '}',
-                    '',
-                    '# Funktsiya',
-                    'function salomBer(ism) {',
-                    '\tprint("Salom,", ism)',
-                    '}',
-                    '',
-                    'salomBer("Ali")'
-                ].join('\n'),
-                language: 'uzc',
-                theme: 'vs-dark',
-                automaticLayout: true,
-                minimap: { enabled: true },
-                scrollBeyondLastLine: false,
-                fontSize: 14,
-                lineNumbers: 'on',
-                roundedSelection: true,
-                scrollbar: {
-                    vertical: 'auto',
-                    horizontal: 'auto'
-                },
-                tabSize: 4,
-                wordWrap: 'on'
-            });
-
-            // Update cursor position in status bar
-            editor.onDidChangeCursorPosition(function(e) {
-                const position = e.position;
-                document.querySelector('.status-item:nth-child(3)').textContent = 
-                    `Ln ${position.lineNumber}, Col ${position.column}`;
-            });
-
-            // Add keyboard shortcut for F5 to run code
-            editor.addCommand(monaco.KeyCode.F5, runCode);
-        });
-
-        // Run UZC code
-        function runCode() {
-            const code = editor.getValue();
-            outputElement.innerHTML = '';
-            
-            try {
-                // Transpile UZC to JavaScript
-                let jsCode = code
-                    .replace(/#(.*)/g, '//$1')  // Convert comments
-                    .replace(/elif/g, 'else if') // Convert elif
-                    .replace(/\{(.+?)\}/g, '${$1}'); // Fix template literals
-
-                // Create execution environment
-                const func = new Function(`
-                    const output = [];
-                    
-                    // UZC built-in functions
-                    const print = (...args) => {
-                        output.push(args.join(' '));
-                    };
-                    
-                    const input = (promptText) => {
-                        return window.prompt(promptText) || '';
-                    };
-                    
-                    const type = (value) => {
-                        if (value === null) return 'null';
-                        if (Array.isArray(value)) return 'array';
-                        return typeof value;
-                    };
-                    
-                    const number = (value) => parseFloat(value);
-                    
-                    // Modified async functions to capture output
-                    const setTimeout = (fn, delay) => {
-                        return window.setTimeout(() => {
-                            try {
-                                fn();
-                            } catch (e) {
-                                output.push('Xato: ' + e.message);
-                            }
-                        }, delay);
-                    };
-                    
-                    const setInterval = (fn, interval) => {
-                        return window.setInterval(() => {
-                            try {
-                                fn();
-                            } catch (e) {
-                                output.push('Xato: ' + e.message);
-                            }
-                        }, interval);
-                    };
-                    
-                    try {
-                        ${jsCode}
-                    } catch (e) {
-                        output.push('Xato: ' + e.message);
-                    }
-                    
-                    return output.join('\\n');
-                `);
-
-                // Execute and display output
-                const result = func();
-                outputElement.innerHTML = result;
-                
-            } catch (e) {
-                outputElement.innerHTML = `<span class="error">Tushunmaydigan xato: ${e.message}</span>`;
-            }
-        }
-
-        // Clear output
-        function clearOutput() {
-            outputElement.innerHTML = '';
-        }
-
-        // Handle keyboard shortcuts
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'F5') {
-                e.preventDefault();
-                runCode();
-            }
-        });
+      }
     </script>
-</body>
+  </body>
 </html>
